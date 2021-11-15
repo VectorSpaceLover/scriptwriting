@@ -1,5 +1,9 @@
-<?php require_once 'session.php'; ?>
+<?php 
 
+require_once 'session.php'; 
+include('callbacks/config.php');
+
+?>
 
 <!DOCTYPE html>
 <html lang="en" class="h-100">
@@ -47,6 +51,22 @@
                                     </form>
                                     <div class="new-account mt-3">
                                         <p>Don't have an account? <a class="text-primary" href="signup.php">Sign up</a></p>
+                                    </div>
+                                    <div class = 'privacy-pages'>
+                                        <p style = 'text-align: center; margin-top: 30px'>
+                                        <?php 
+                                        $sql = "SELECT * from pages";                                        
+                                        $result = $con->query($sql);
+                                        $flag = false;
+
+                                        if($result->num_rows > 0){
+                                            while($row = $result->fetch_assoc()){
+                                                echo (($flag) ? " | " : "") . '<a href = "#" page-id = "' . $row['id'] . '"> ' . $row['page_title'] . ' </a>';
+                                                if(!$flag) $flag = true;
+                                            }
+                                        }
+                                        ?>
+                                        </p>
                                     </div>
                                 </div>
                             </div>

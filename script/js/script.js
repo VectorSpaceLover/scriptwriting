@@ -12,33 +12,43 @@ var Script = React.createClass({displayName: "Script",
 		};
 	},
 	componentWillMount: function() {
-		this.loadScript();
+		if(this.getParams().scriptId)
+			this.loadScript();
+		else
+			this.newScript();
 	},
 	componentWillReceiveProps: function() {
 		this.loadScript();
 		var self = this;
 
 		setTimeout(function(){
-			console.log('component received props before 1s');
 			self.forceUpdate();
 		}, 2000);
 	},
 	componentDidMount: function() {
 		var self = this;
-		// console.log('component mounted');
-		console.log(this.state.scriptId);
+		// console.log(this.state.scriptId);
 		setTimeout(function(){
 			console.log('component mounted before 2s');
 			self.forceUpdate();
 		}, 2000);
 	},
+	newScript: function(){
+		var fb = new Firebase("https://screenwrite.firebaseio.com/");
+		var newRef = fb.push();
+
+		window.location.hash = '#/' + newRef.key();
+		window.location.reload(); // force firebase to reload
+	},
 	loadScript: function() {
+
 		if (this.firebaseRefs.script) this.unbind('script');
 		this.bindAsObject(new Firebase("https://screenwrite.firebaseio.com/"+this.getParams().scriptId), "script");	
 		// CLEANUP OLD DATA
 		var fb = new Firebase("https://screenwrite.firebaseio.com/"+this.state.scriptId);
 		fb.once('value', (function(snapshot){
 			if (!snapshot.val()) {
+				console.log('snapshot value is null - script.js');
 				fb.set({});
 				var newLine = fb.child('lines').push({ type: 'scene' });
 				fb.update({ firstLine: newLine.key() });
@@ -60,6 +70,7 @@ var Script = React.createClass({displayName: "Script",
 			if (_.keys(this.state.script.lines).length <= 2)
 				fb.remove();
 		}).bind(this);
+
 	},
 	editing: function(line) {
 		this.setState({editing:line});
@@ -73,7 +84,7 @@ var Script = React.createClass({displayName: "Script",
 		var passed = false;
 		var iterate = (function(index){
 			var line = this.state.script.lines[index];
-			if (line.type == type
+			if (line.type == trim(type)
 				&& line.text
 				&& line.text.length > text.length
 				&& line.text.toUpperCase().indexOf(text) === 0)
@@ -88,9 +99,7 @@ var Script = React.createClass({displayName: "Script",
 		return (suggestions.pop() || '').substr(text.length);
 	},
 	handleKey: function(event, line, index, prevIndex, prevPrevIndex) {
-		// console.log(line);console.log(event.keyCode);
-		///222
-		// console.log('second handle key');
+
 		// placeCaretAtEnd(this.refs.text.getDOMNode());
 		switch (event.keyCode) {
 			case 38: // up
@@ -166,7 +175,7 @@ var Script = React.createClass({displayName: "Script",
 				if (line.text) {
 					// create new line pointing to current line's `next`
 
-					var newItem = { type: nextTypes[line.type] };
+					var newItem = { type: nextTypes[trim(line.type)] };
 					if (line.next) newItem.next = line.next;
 					newRef = this.firebaseRefs.script.child('lines').push(newItem);
 					// point current line to the new line
@@ -178,93 +187,96 @@ var Script = React.createClass({displayName: "Script",
 		}
 		// placeCaretAtEnd(this.refs.text.getDOMNode());
 	},
-	setScript: function(extension, result){
+	// setScript: function(extension, result){
 
-		// console.log(extension);
+	// 	console.log('script.js - setscript');
 		
-		var exts = ['html', 'xml', 'pdf'];
-		if(exts.indexOf(extension) == -1){
-			alert('Import file correctly');
-			return;
-		}
+	// 	var exts = ['html', 'xml', 'pdf'];
+	// 	if(exts.indexOf(extension) == -1){
+	// 		alert('Import file correctly');
+	// 		return;
+	// 	}
 
-		if (this.firebaseRefs.script) this.unbind('script');
-		var scriptId = new Date().getTime();
-		var doc;
-		var type = 'text/' + extension;
-		var doc = new DOMParser().parseFromString(result, type);
 		
-		// console.log(doc);
-
-		var lines;
-		if(extension == 'html')
-			lines = doc.getElementsByTagName('li')
-		else if(extension == 'xml')
-			lines = doc.getElementsByTagName('element');
-
-		// console.log(lines); 
+	// 	var doc;
+	// 	var type = 'text/' + extension;
+	// 	var doc = new DOMParser().parseFromString(result, type);
 		
-		this.bindAsObject(new Firebase('https://screenwrite.firebaseio.com/' + scriptId), 'script');
-		var fb = new Firebase('https://screenwrite.firebaseio.com/' + scriptId);
-		// var fb = new Firebase('https://screenwrite.firebaseio.com/');
-		// var newRef = fb.push();
+	// 	// console.log(doc);
 
-		fb.once('value',(function(snapshot){	
-			// console.log('once value ');
-			var length = lines.length;
-			// var length = 10;
+	// 	var lines;
+	// 	if(extension == 'html')
+	// 		lines = doc.getElementsByTagName('li')
+	// 	else if(extension == 'xml')
+	// 		lines = doc.getElementsByTagName('element');
+
+	// 	console.log(lines); 
+		
+	// 	if (this.firebaseRefs.script) this.unbind('script');
+	// 	var scriptId = new Date().getTime();
+	// 	this.bindAsObject(new Firebase('https://screenwrite.firebaseio.com/' + scriptId), 'script');
+	// 	var fb = new Firebase('https://screenwrite.firebaseio.com/' + scriptId);
+	// 	// var fb = new Firebase('https://screenwrite.firebaseio.com/');
+	// 	// var newRef = fb.push();
+
+	// 	fb.once('value',(function(snapshot){	
+	// 		// console.log('once value ');
+	// 		var length = lines.length;
+	// 		// var length = 10;
 			
-			// console.log(length);
+	// 		fb.set({});
+	// 		var newLine = fb.child('lines').push({type:'scene', text: new Date().toLocaleDateString()});
+	// 		fb.update({firstLine: newLine.key()});
 
-			fb.set({});
-			var newLine = fb.child('lines').push({type:'scene', text: new Date().toLocaleDateString()});
-			fb.update({firstLine: newLine.key()});
+	// 		var previous = newLine, previousIndex = newLine.key();
 
-			var previous = newLine, previousIndex = newLine.key();
+	// 		var type, value, line;
+	// 		for(var i = 0; i < length; i++){
 
-			var type, value, line;
-			for(var i = 0; i < length; i++){
+	// 			if(extension == 'html'){
+	// 				type = lines[i].getAttribute('type');
+	// 				value = lines[i].firstElementChild.innerHTML;
+	// 			}else if(extension == 'xml'){
+	// 				// type = lines[i].getElementsByTagName('type')[0].nodeValue;
+	// 				// value = lines[i].getElementsByTagName('value')[0].nodeValue;
+	// 				type = lines[i].getElementsByTagName('type')[0].innerHTML;
+	// 				value = lines[i].getElementsByTagName('value')[0].innerHTML;
+	// 				// console.log(type, value);
+	// 				// console.log(lines[i].getElementsByTagName('type')[0].innerHTML);
+	// 			}
 
-				if(extension == 'html'){
-					type = lines[i].getAttribute('type');
-					value = lines[i].firstElementChild.innerHTML;
-				}else if(extension == 'xml'){
-					// type = lines[i].getElementsByTagName('type')[0].nodeValue;
-					// value = lines[i].getElementsByTagName('value')[0].nodeValue;
-					type = lines[i].getElementsByTagName('type')[0].innerHTML;
-					value = lines[i].getElementsByTagName('value')[0].innerHTML;
-					// console.log(type, value);
-					// console.log(lines[i].getElementsByTagName('type')[0].innerHTML);
-				}
-
-				line = fb.child('lines').push({type: type, text: value});
-				var index = line.key();
-				if(previous){
-					fb.child('lines/'+previousIndex+'/next').set(index);
-				}
-				previous = line;
-				previousIndex = index;
-			}
-		}).bind(this));
-		window.location.hash = '#/' + scriptId;
-	},
+	// 			line = fb.child('lines').push({type: type, text: value});
+	// 			var index = line.key();
+	// 			if(previous){
+	// 				fb.child('lines/'+previousIndex+'/next').set(index);
+	// 			}
+	// 			previous = line;
+	// 			previousIndex = index;
+	// 		}
+	// 	}).bind(this));
+	// 	window.location.hash = '#/' + scriptId;
+	// },
 	render: function() {
-		var indexes = {};
+
+		console.log(this.state.script);
 		var lines = [];
 		var newLines = [];
 		var previous = null, prevPrevious = null;
 		var next = (function(line, index){
-			lines.push(
-				React.createElement(Line, {line: line, key: index, index: index, ref: 'line'+index, 
-					previous: previous, prevPrevious: prevPrevious, 
-					onFocus: this.editing.bind(this, index), 
-					getSuggestion: this.getSuggestion, 
-					readonly: this.state.action == 'view', 
-					onKeyDown: this.handleKey})
-			);
-			prevPrevious = previous;
-			previous = index;
-			if (line.next) next(this.state.script.lines[line.next], line.next);
+			if(!isEmpty(line)){
+				lines.push(
+					React.createElement(Line, {line: line, key: index, index: index, ref: 'line'+index, 
+						previous: previous, prevPrevious: prevPrevious, 
+						onFocus: this.editing.bind(this, index), 
+						getSuggestion: this.getSuggestion, 
+						readonly: this.state.action == 'view', 
+						onKeyDown: this.handleKey})
+				);
+				prevPrevious = previous;
+				previous = index;
+				if (line != undefined && line.next != undefined && line.next) next(this.state.script.lines[line.next], line.next);
+			}
+			
 		}).bind(this);
 
 
@@ -273,6 +285,7 @@ var Script = React.createClass({displayName: "Script",
 		} else {
 			lines = React.createElement("h1", {className: "text-center"}, "Loading Script...")
 		}
+
 		var getStyle = function(e, styleName) {
 		  var styleValue = "";
 		  if (document.defaultView && document.defaultView.getComputedStyle) {
@@ -285,24 +298,24 @@ var Script = React.createClass({displayName: "Script",
 		  }
 		  return styleValue;
 		}
+
 		var px2digit = function(px){
 			return Number(px.split('px')[0]);
 		}
-		var linesForPage = [[]];
 		
-		// console.log('render ' + lines.length +' s lines');
 		if(lines.length>0){
-			// console.log('lines length bigger than 0');
+
 			let height = 0;
 			let index = 0;
 
 			var h, mt, mb, t, pb, query, nodes, node;
 			
 			for(var i = 0; i<lines.length;i++){
+				
 				query = '[data-reactid=".0.2.1.$' + lines[i].key + '"]';
 				nodes = document.querySelectorAll(query);
 				node = nodes[0];
-				// console.log(node);
+
 				if(node != undefined){
 					h = px2digit(getStyle(node, 'height'));
 					mt = px2digit(getStyle(node, 'margin-top'));
@@ -310,16 +323,18 @@ var Script = React.createClass({displayName: "Script",
 					height += (h + mt + mb);
 
 					let cl = node.getAttribute('class');
-					if(cl.indexOf('new_list') > -1){
-						 var h = (1056 - height) + 'px';
-						var splitter = React.createElement('div', {className:'next'});
+
+					if(cl.indexOf('new_list') > -1 && lines.length > 1){
+						var h = (1056 - height) + 'px';
+						var splitter = React.createElement('div', {className:'next'}, 
+							React.createElement('span', null, 'Page '+ (index + 1))
+						);
 						var spacer = React.createElement('div', { style: {height: h, border: 'none', width: '816px'}});
 						newLines.push(spacer);
 						newLines.push(splitter);
 						height = 0;
+						index ++;
 					}
-
-					
 				}else{
 
 				}
@@ -327,24 +342,26 @@ var Script = React.createClass({displayName: "Script",
 				if(height > 1056){
 					height = 0;
 					index ++;
-					linesForPage[index] = [];
-
 					
-					
-					var splitter = React.createElement('div', {className:'next'});
+					var splitter = React.createElement('div', {className:'next'}, 
+						React.createElement('span', null, 'Page '+ (index + 1))
+					);
 					newLines.push(splitter);
 				}else{
 
 				}
-				// console.log(index);
-				linesForPage[index].push(lines[i]);
-				newLines.push(lines[i]);
+				
+				// if(!isEmpty(lines[i]) && trim(lines[i].props.line.type) != 'new_list')
+				if(!isEmpty(lines[i]))
+					newLines.push(lines[i]);
 			}
 		}
 
+		log([this.state]);
 		var cm = [...Array(9).keys()];
-		var mm = [...Array(10).keys()];
-
+		var mm = [...Array(7).keys()];
+		var lastmm = [...Array(3).keys()];
+		
 		return (
 			React.createElement("div", {style: {background: '#ddd'}}, 
 				React.createElement(Navbar,{}),
@@ -352,11 +369,17 @@ var Script = React.createClass({displayName: "Script",
 					script: this.state.script, 
 					editingIndex: this.state.editing, 
 					readonly: this.state.action=='view',
-					setScript: this.setScript.bind(this),
+					// setScript: this.setScript.bind(this),
 				}),
 				React.createElement('div',{style: {width: '816px', margin: 'auto'}},
 					React.createElement('div',{className: 'ruler'},
-						cm.map(() => {
+						cm.map((value) => {
+							if(value == 8)
+								return React.createElement('div', {className: 'cm'},
+									lastmm.map(()=>{
+										return React.createElement('div', {className: 'mm'});
+									})
+								);
 							return React.createElement('div', {className: 'cm'},
 								mm.map(()=>{
 									return React.createElement('div', {className: 'mm'});

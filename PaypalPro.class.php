@@ -101,8 +101,6 @@ class PaypalPro
         {
             $nvpStr = $nvpheader.$nvpStr;
         }
-        //if USE_PROXY constant set to TRUE in Constants.php, then only proxy will be enabled.
-       //Set proxy name to PROXY_HOST and port number to PROXY_PORT in constants.php 
         if($this->useProxy)
             curl_setopt ($ch, CURLOPT_PROXY, $this->proxyHost.":".$this->proxyPort); 
     

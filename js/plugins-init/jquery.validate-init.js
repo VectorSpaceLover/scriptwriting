@@ -29,6 +29,7 @@ jQuery("#login-form").validate({
     success: function(e) {
         jQuery(e).closest(".form-group").removeClass("is-invalid"), jQuery(e).remove()
     },
+
     submitHandler: function (form) {
         $.ajax({
             type: "POST",
@@ -117,13 +118,18 @@ jQuery(".signup-form").validate({
             data: $(form).serialize(),
             success: function (data) {
                 console.log(data);
-              var result = isJSON(data) ? JSON.parse(data) : data;
-              console.log(result.msg);
-              if( result.msg == 'success') {
-                window.location.href='payment.php';
-              } else {
-                swal(result.msg, "", "error")
-              }
+                var result = isJSON(data) ? JSON.parse(data) : data;
+                console.log(result.msg);
+                if( result.msg == 'success') {
+                    // window.location.href='payment.php';
+                    var msg = "We've finished setting up your account." +
+				            "We sent you a confirmation to your email account";
+                    swal(msg, "", "success");
+                } else {
+                    // swal(result.msg, "", "error")
+                    swal(result.description, "", "error");
+                }
+                // 
             }
         });
         return false; // required to block normal submit since you used ajax

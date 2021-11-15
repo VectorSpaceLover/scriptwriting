@@ -167,7 +167,7 @@ if(isset($_POST['emails']))
 
 function send_mail($email,$message,$subject)
 {
-
+  //This was project for patrick, but now everybody can enjoy this.
   $from="team@procedurerock.com";
   $from_name="ProcedureRock Team";
   //$cc="";

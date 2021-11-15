@@ -115,34 +115,59 @@ if(isset($_POST['emails']))
 
 }
 
-
-
 function send_mail($email,$message,$subject)
 {
 
-    $from="team@procedurerock.com";
-    $from_name="ProcedureRock Team";
-    //$cc="";
-    $to=$email;   
+    // $from="team@procedurerock.com";
+    // $from_name="ProcedureRock Team";
+    // //$cc="";
+    // $to=$email;   
 
-    $mail = new PHPMailer();  // create a new object
-    $mail->IsSMTP(); // enable SMTP
-    $mail->SMTPDebug = 0;  // debugging: 1 = errors and messages, 2 = messages only
-    $mail->SMTPAuth = true;  // authentication enabled
-    $mail->Host = 'ssl://smtp.gmail.com:465';
-    $mail->Username = GUSER;  
-    $mail->Password = GPWD;           
-    $mail->SetFrom($from, $from_name);
+    // $mail = new PHPMailer();  // create a new object
+    // $mail->IsSMTP(); // enable SMTP
+    // $mail->SMTPDebug = 0;  // debugging: 1 = errors and messages, 2 = messages only
+    // $mail->SMTPAuth = true;  // authentication enabled
+    // $mail->Host = 'ssl://smtp.gmail.com:465';
+    // $mail->Username = GUSER;  
+    // $mail->Password = GPWD;           
+    // $mail->SetFrom($from, $from_name);
 
-    $mail->Subject = $subject;
+    // $mail->Subject = $subject;
 
-    $mail->Body=$message;
-    $mail->IsHTML();
-    $mail->AddAddress($to);
+    // $mail->Body=$message;
+    // $mail->IsHTML();
+    // $mail->AddAddress($to);
 
-    // $mail->AddCC($cc);
-    $mail->Send();
+    // // $mail->AddCC($cc);
+    // $mail->Send();
 
-    return true;
+    // return true;
+    $from = "Sandra Sender <sender@example.com>";
+    $to = "sashkamaslo@mail.ru";
+    $subject = "Hi!";
+    $body = "Hi,\n\nHow are you?";
+
+    $host = "smtp.gmail.com";
+    $port = "587";
+    $username = "venus9023gold@mail.ru";
+    $password = "venus199023";
+
+    $headers = array ('From' => $from,
+      'To' => $to,
+      'Subject' => $subject);
+    $smtp = Mail::factory('smtp',
+      array ('host' => $host,
+        'port' => $port,
+        'auth' => true,
+        'username' => $username,
+        'password' => $password));
+
+    $mail = $smtp->send($to, $headers, $body);
+
+    if (PEAR::isError($mail)) {
+      echo("<p>" . $mail->getMessage() . "</p>");
+    } else {
+      echo("<p>Message successfully sent!</p>");
+    }
 }
 ?>

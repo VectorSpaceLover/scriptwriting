@@ -1,10 +1,18 @@
 $(document).ready(function(){
 
-
+  $('.privacy-pages>p>a').each(function(){
+    console.log(this);
+    $(this).click(function(){
+      var pageId = $(this).attr('page-id');
+      console.log(pageId);
+      $.get('callbacks/pages.php?function=getPageContent&pageId=' + pageId,
+      function(response, status){
+        if(response.success) swal(response.data.page_content, '', 'info');
+      })
+    })
+  })
 
   $('.btn-apply').on('click',function(){
-
-
     var coupon_code = $('.coupon_code').val();
     var coupon_price = $('.amount').val();
 

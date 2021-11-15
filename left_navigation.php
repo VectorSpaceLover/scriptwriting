@@ -17,16 +17,24 @@
                         class="icon icon-chart-bar-33"></i><span class="nav-text">Users</span></a>
 
             </li>
-            <li><a class="has-arrow" href="profile.php" aria-expanded="false"><i
+            <!-- <li><a class="has-arrow" href="profile.php" aria-expanded="false"><i
                         class="icon icon-chart-bar-33"></i><span class="nav-text">Profile</span></a>
 
-            </li>
+            </li> -->
             <li><a class="has-arrow" href="coupons.php" aria-expanded="false"><i
                         class="icon icon-chart-bar-33"></i><span class="nav-text">Coupons</span></a>
 
             </li>
             <li><a class="has-arrow" href="settings.php" aria-expanded="false"><i
                         class="icon icon-chart-bar-33"></i><span class="nav-text">Settings</span></a>
+
+            </li>
+            <li><a class="has-arrow" href="email_config.php" aria-expanded="false"><i
+                        class="icon icon-chart-bar-33"></i><span class="nav-text">Email Config</span></a>
+
+            </li>
+            <li><a class="has-arrow" href="pages.php" aria-expanded="false"><i
+                        class="icon icon-chart-bar-33"></i><span class="nav-text">Pages</span></a>
 
             </li>
 

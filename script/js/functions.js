@@ -8,20 +8,18 @@ var types = [
 	'parenthetical',
 	'transition',
 	'shot',
-	'cast_list',
 	'new_list',
 	'end_of_act'
 ];
 var nextTypes = {
 	general: 'general',
 	scene: 'action',
-	action: 'character',
+	action: 'action',
 	character: 'dialogue',
-	dialogue: 'character',
-	parenthetical: 'character',
+	dialogue: 'action',
+	parenthetical: 'dialogue',
 	transition: 'scene',
 	shot: 'action',
-	cast_list: 'cast_list',
 	new_list: 'scene',
 	end_of_act: 'action',
 }
@@ -34,7 +32,6 @@ var typeButtonStr = {
 	parenthetical: 'Parenthetical',
 	transition: 'Transition',
 	shot: 'Shot',
-	cast_list: 'Cast List',
 	new_list: 'New List',
 	end_of_act: 'End of Act',
 }
@@ -91,4 +88,35 @@ function S4() {
 }
 function guid() {
    return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+}
+function isEmpty(value){
+	if(value == undefined || value == '' || value == {} || value == [] || !value){
+		return true;
+	}
+	return false;
+}
+
+function log(values){
+	var type = typeof(values);
+	if(type == 'string')
+		console.log(values)
+	else if(type = 'object')
+		console.log([...values]);
+	else 
+		console.log(values);
+}
+function trim(someText){
+	return someText.replace(/(\r\n|\n|\r)/gm, "");
+}
+
+function removeTags(str) {
+    if ((str===null) || (str===''))
+        return false;
+    else
+        str = str.toString();
+          
+    // Regular expression to identify HTML tags in 
+    // the input string. Replacing the identified 
+    // HTML tag with a null string.
+    return str.replace( /(<([^>]+)>)/ig, '');
 }

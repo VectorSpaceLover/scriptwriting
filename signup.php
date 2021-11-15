@@ -108,7 +108,7 @@
                                         </div>
                                     </form>
                                     <div class="new-account mt-3">
-                                        <p>Already have an account? <a class="text-primary" href="page-login.html">Sign in</a></p>
+                                        <p>Already have an account? <a class="text-primary" href="./page_logout.php">Sign in</a></p>
                                     </div>
                                 </div>
                             </div>

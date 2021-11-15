@@ -40,8 +40,6 @@ if($page == 'dashboard.php' || $page == 'template.php') { ?>
 
 
   <script src="./js/dashboard/dashboard-1.js"></script>
-
-
 <?php } else if($page == 'index.php' || $page == 'signup.php') { ?>
 
   <!-- Jquery Validation -->

@@ -78,11 +78,7 @@
 
                             <div id="form-container">
                               <div id="sq-ccbox">
-                                <!--
-                                Be sure to replace the action attribute of the form with the path of
-                                the Transaction API charge endpoint URL you want to POST the nonce to
-                                (for example, "/process-card")
-                              -->
+                              
                               <form id="nonce-form" novalidate action="square_payment.php" method="post">
 
                                 <div class="form-group">

@@ -303,7 +303,7 @@ var Nav = React.createClass({displayName: "Nav",
 				// React.createElement("header", {className: "visible-print"}, 
 				// 	React.createElement("p", {className: "uppercase"}, this.props.script.title), 
 				// 	this.props.script.authors && React.createElement("p", null, "by"), 
-				// 	React.createElement("p", null, this.props.script.authors), 
+				// 	React.createElement("p" , null, this.props.script.authors), 
 				// 	this.state.highlight && React.createElement("p", {className: "character-highlighted"}, "Character: ", this.state.highlight.toUpperCase()), 
 				// 	React.createElement("address", {className: "text-left"}, this.props.script.leftAddress), 
 				// 	React.createElement("address", {className: "text-right"}, this.props.script.rightAddress)

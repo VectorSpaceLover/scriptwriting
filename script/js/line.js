@@ -2,8 +2,9 @@
 var Line = React.createClass({displayName: "Line",
 	mixins: [ReactFireMixin, StopPropagationMixin, ReactRouter.State],
 	getInitialState: function() {
+		// console.log(this.props.line);
 		return {
-			comments: this.props.line.comments,
+			// comments: this.props.line['comments'] || '',
 			commenting: false,
 			scriptId: this.getParams().scriptId,
 			focused: false,
@@ -12,15 +13,31 @@ var Line = React.createClass({displayName: "Line",
 	componentWillMount: function() {
 		this.bindAsObject(new Firebase("https://screenwrite.firebaseio.com/"+this.state.scriptId+"/lines/" + this.props.index), "line");
 	},
+	componentWillReceiveProps: function(newProps){
+		// console.log('line received new props');
+		// console.log(newProps);
+	},
 	handleChange: function(event) {
-		//333
-		// console.log('third handle change');
-		this.firebaseRefs.line.update({'text':event.target.value});
+		var value = event.target.value;
+		var type = this.props.line.type;
+
+		if(type == 'action')
+			value = this.capitalize(value);
+		this.firebaseRefs.line.update({'text': value});
 		// placeCaretAtEnd(this.refs.text.getDOMNode());
 	},
-	handleComment: function(event) {
-		this.firebaseRefs.line.update({'comment':event.target.value});
+	capitalize: function(str){
+
+		var res = '';
+		if(str.length > 0)
+			res = str[0].toUpperCase() + str.substring(1);
 		
+		return res;
+	},
+	handleComment: function(event) {
+		
+		this.firebaseRefs.line.update({'comment':event.target.value});
+		// this
 	},
 	nextType: function(){
 		var index = types.indexOf(this.props.line.type) + 1;
@@ -65,7 +82,7 @@ var Line = React.createClass({displayName: "Line",
 		}
 		
 		this.props.onKeyDown(event, this.props.line, this.props.index, this.props.previous, this.props.prevPrevious);
-		placeCaretAtEnd(this.refs.text.getDOMNode());
+		// placeCaretAtEnd(this.refs.text.getDOMNode());
 	},
 	comment: function(event) {
 		event.stopPropagation();
@@ -96,10 +113,14 @@ var Line = React.createClass({displayName: "Line",
 	render: function() {
 		var classes = {
 			line: true,
-			commented: this.props.line.comment,
+			// commented: this.props.line.comment,
+			commented: '',
 			highlight: highlight && this.props.line.text && highlight.toUpperCase()==this.props.line.text.toUpperCase()
 		};
-		classes[this.props.line.type] = true;
+		// console.log(this.props.line);
+		var type = trim(this.props.line.type)
+		if(type == undefined || type == '') return;
+		classes[type] = true;
 		classes = React.addons.classSet(classes);
 
 		var line, suggest;

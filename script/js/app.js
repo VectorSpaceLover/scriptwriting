@@ -12,7 +12,8 @@ RouteHandler = ReactRouter.RouteHandler;
 DefaultRoute = ReactRouter.DefaultRoute;
 var routes = (
 	React.createElement(Route, {handler: App}, 
-		React.createElement(Route, {handler: Home}), 
+		// React.createElement(Route, {handler: Home}), 
+		React.createElement(Route,{handler: Script, path: '/', name: 'home'}),
 		React.createElement(Route, {name: "script", path: "/:scriptId", handler: Script}), 
 		React.createElement(Route, {name: "scriptAction", path: "/:scriptId/:action", handler: Script})
 	)

@@ -37,7 +37,8 @@
           <div class="card">
             <div class="card-title">
               <h4 class="pt-3 ml-3">Scripts</h4>
-              <a href = 'script/#/<?php echo($_SESSION['userid'].round(microtime(true) * 1000))?>' target = '_blank' class="mr-3 btn btn-secondary float-right new-script-button">New Script</a>
+              
+              <a href = 'script' target = '_blank' class="mr-3 btn btn-secondary float-right new-script-button">New Script</a>
             </div>
             <div class="card-body">
               <div class = "container scripts_detail"></div>
